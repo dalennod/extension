@@ -136,7 +136,7 @@ const updateEntry = async (idInDb) => {
     }
 }
 
-btnRemove.addEventListener("click", () => removeEntry(bmId.innerHTML));
+btnRemove.addEventListener("dblclick", () => removeEntry(bmId.innerHTML));
 const removeEntry = async (idInDb) => {
     const fetchURL = ENDPOINT + "delete/" + idInDb;
     const res = await fetch(fetchURL);
