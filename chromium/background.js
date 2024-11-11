@@ -30,7 +30,7 @@ const checkConnection = async () => {
         try {
             const fetchURL = ENDPOINT + "add/";
             const res = await fetch(fetchURL);
-            console.log(res.status, await res.text());
+            // console.log(res.status, await res.text());
         } catch (err) {
             conn = false;
             console.error("server not running. ERROR:", err);
@@ -42,9 +42,19 @@ const checkConnection = async () => {
 };
 
 let currTab = "";
-chrome.tabs.onActivated.addListener((activeInfo) => {
+const tabActivated = (activeInfo) => {
     chrome.tabs.get(activeInfo.tabId, async (tab) => {
         currTab = await tab.url;
         await checkConnection();
     });
-});
+};
+
+const tabUpdated = async (tabId, changeInfo, tab) => {
+    if (changeInfo.url) {
+        currTab = await tab.url;
+        await checkConnection();
+    }
+};
+
+chrome.tabs.onActivated.addListener(tabActivated);
+chrome.tabs.onUpdated.addListener(tabUpdated);
