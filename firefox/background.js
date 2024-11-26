@@ -1,6 +1,6 @@
 "use strict";
 
-const ENDPOINT = "http://localhost:41415/";
+const API_ENDPOINT = "http://localhost:41415/api/";
 
 const existsIconPaths = {
     48: "icons/exists/dalennod-exists-48.png",
@@ -12,7 +12,7 @@ const defaultIconPaths = {
 };
 
 const checkUrl = async (currTabUrl) => {
-    const fetchUrl = ENDPOINT + "checkUrl/";
+    const fetchUrl = API_ENDPOINT + "check-url/";
     const res = await fetch(fetchUrl, {
         method: "POST",
         body: JSON.stringify({ url: currTabUrl }),
@@ -28,7 +28,7 @@ let conn = false;
 const checkConnection = async () => {
     if (!conn) {
         try {
-            const fetchURL = ENDPOINT + "add/";
+            const fetchURL = API_ENDPOINT + "add/";
             const res = await fetch(fetchURL);
             // console.log(res.status, await res.text());
         } catch (err) {
