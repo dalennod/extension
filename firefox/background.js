@@ -30,7 +30,6 @@ const checkConnection = async () => {
         try {
             const fetchURL = API_ENDPOINT + "add/";
             const res = await fetch(fetchURL);
-            // console.log(res.status, await res.text());
         } catch (err) {
             conn = false;
             console.error("server not running. ERROR:", err);

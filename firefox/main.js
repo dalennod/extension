@@ -8,11 +8,12 @@ const [overlayDiv, overlayText, checkmark, archiveWarn] = [
     document.querySelector("#checkmark"),
     document.querySelector("#archive-warn"),
 ];
-const [btnCreate, btnUpdate, btnRemove, btnArchive] = [
-    document.querySelector("#button-add-req"),
-    document.querySelector("#button-update-req"),
-    document.querySelector("#button-remove-req"),
-    document.querySelector("#radio-btn-archive"),
+const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [
+    document.getElementById("button-add-req"),
+    document.getElementById("button-update-req"),
+    document.getElementById("button-remove-req"),
+    document.getElementById("radio-btn-archive"),
+    document.getElementById("button-refetch-thumbnail"),
 ];
 const [
     bmId,
@@ -73,15 +74,14 @@ const checkUrl = async (currTabUrl) => {
         method: "POST",
         body: JSON.stringify({ url: currTabUrl }),
     });
-    if (res.status == 404) {
-        return;
-    }
-    const receviedData = await res.json();
+    if (res.status != 404) {
+        const receviedData = await res.json();
 
-    btnUpdate.removeAttribute("hidden");
-    btnRemove.removeAttribute("hidden");
-    btnCreate.setAttribute("hidden", "");
-    fillData(JSON.parse(JSON.stringify(receviedData)));
+        btnUpdate.removeAttribute("hidden");
+        btnRemove.removeAttribute("hidden");
+        btnCreate.setAttribute("hidden", "");
+        fillData(JSON.parse(JSON.stringify(receviedData)));
+    }
 };
 
 const fillData = (dataFromDb) => {
@@ -94,13 +94,15 @@ const fillData = (dataFromDb) => {
     dataFromDb.archive
         ? btnArchive.setAttribute("hidden", "")
         : btnArchive.removeAttribute("hidden");
+    dataFromDb.byteThumbURL
+        ? btnRefetchThumbnail.setAttribute("hidden", "")
+        : btnRefetchThumbnail.removeAttribute("hidden");
 };
 
 const fillAllGroups = async () => {
     const fetchUrl = API_ENDPOINT + "groups/";
     const res = await fetch(fetchUrl);
     const allGroups = await res.text();
-    console.log(allGroups);
     bmGroupsList.innerHTML = allGroups;
 };
 
@@ -186,6 +188,16 @@ const removeEntry = async (idInDb) => {
         overlayDiv.style.display = "none";
         window.close();
     }, 2000);
+};
+
+btnRefetchThumbnail.addEventListener("click", () =>
+    refetchThumbnail(bmId.innerHTML),
+);
+const refetchThumbnail = async (idInDb) => {
+    const fetchUrl = API_ENDPOINT + "refetch-thumbnail/" + idInDb;
+    const res = await fetch(fetchUrl);
+    if (!res.ok) console.log("error refetching thumbnail. STATUS:", res.status);
+    // console.log(await res.text());
 };
 
 const resizeInput = () => {
