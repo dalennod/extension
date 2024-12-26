@@ -11,5 +11,5 @@ Dalennod's browser extension for Firefox and Chromium.
 <details>
 <summary>Browser Extension:</summary>
 
-![Browser extension](/screenshots/ff-ext.png)
+![Browser extension](/screenshot/ff-ext.png)
 </details>
