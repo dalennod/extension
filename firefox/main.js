@@ -10,39 +10,9 @@ const defaultIconPaths = {
     96: "icons/dalennod-96.png",
 };
 
-const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions] = [
-    document.querySelector("#done-overlay-div"),
-    document.querySelector("#done-overlay-text"),
-    document.querySelector("#checkmark"),
-    document.querySelector("#archive-warn"),
-    document.getElementById("more-options"),
-];
-const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [
-    document.getElementById("button-add-req"),
-    document.getElementById("button-update-req"),
-    document.getElementById("button-remove-req"),
-    document.getElementById("radio-btn-archive"),
-    document.getElementById("button-refetch-thumbnail"),
-];
-const [
-    bmId,
-    inputUrl,
-    inputTitle,
-    inputNote,
-    inputKeywords,
-    inputBmGroup,
-    bmGroupsList,
-    archiveRadioNo,
-] = [
-    document.querySelector("#bm-id"),
-    document.querySelector("#input-url"),
-    document.querySelector("#input-title"),
-    document.querySelector("#input-note"),
-    document.querySelector("#input-keywords"),
-    document.querySelector("#input-bmGroup"),
-    document.querySelector("#bmGroups-list"),
-    document.querySelector("#radio-no"),
-];
+const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("more-options"), document.getElementById("input-archive-label")];
+const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [ document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail"), ];
+const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [ document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive"), ];
 
 window.addEventListener("load", () => {
     getCurrTab();
@@ -67,8 +37,8 @@ const checkConnection = async () => {
             console.log(res.status, await res.text());
         } catch (e) {
             conn = false;
-            document.querySelector(".centered").innerHTML =
-                `<a href="https://github.com/dalennod/dalennod" target="_blank"> <span style="text-decoration: underline;">Dalennod</span> </a>(web-server) must be running.`;
+            document.querySelector(".centered").innerHTML = `<a href="https://github.com/dalennod/dalennod" target="_blank"> <span style="text-decoration: underline;">Dalennod</span> </a>(web-server) must be running.`;
+            await browser.browserAction.setIcon({ path: defaultIconPaths });
             return;
         }
         conn = true;
@@ -77,6 +47,7 @@ const checkConnection = async () => {
     await fillAllGroups();
 };
 
+let oldData = "";
 const checkUrl = async (currTabUrl) => {
     const fetchUrl = API_ENDPOINT + "check-url/";
     const res = await fetch(fetchUrl, {
@@ -91,7 +62,8 @@ const checkUrl = async (currTabUrl) => {
         btnUpdate.removeAttribute("hidden");
         btnRemove.removeAttribute("hidden");
         btnCreate.setAttribute("hidden", "");
-        fillData(JSON.parse(JSON.stringify(receviedData)));
+        oldData = JSON.parse(JSON.stringify(receviedData));
+        fillData(oldData);
 
         await browser.browserAction.setIcon({ path: existsIconPaths });
     }
@@ -105,12 +77,8 @@ const fillData = (dataFromDb) => {
     inputNote.value = dataFromDb.note;
     inputKeywords.value = dataFromDb.keywords;
     inputBmGroup.value = dataFromDb.bmGroup;
-    dataFromDb.archive
-        ? btnArchive.setAttribute("hidden", "")
-        : btnArchive.removeAttribute("hidden");
-    dataFromDb.byteThumbURL
-        ? moreOptions.setAttribute("hidden", "")
-        : moreOptions.removeAttribute("hidden");
+    dataFromDb.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
+    dataFromDb.byteThumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
 };
 
 const fillAllGroups = async () => {
@@ -128,13 +96,14 @@ const addEntry = async () => {
         note: inputNote.value,
         keywords: inputKeywords.value,
         bmGroup: inputBmGroup.value,
-        archive: archiveRadioNo.checked ? false : true,
+        archive: inputArchive.checked ? true : false,
     };
 
     if (dataJSON.archive) {
         archiveWarn.removeAttribute("hidden");
-        btnCreate.disabled = true;
     }
+
+    btnCreate.disabled = true;
 
     const fetchURL = API_ENDPOINT + "add/";
     const res = await fetch(fetchURL, {
@@ -168,8 +137,18 @@ const updateEntry = async (idInDb) => {
         note: inputNote.value,
         keywords: inputKeywords.value,
         bmGroup: inputBmGroup.value,
-        archive: archiveRadioNo.checked ? false : true,
+        archive: inputArchive.checked ? true : false,
     };
+
+    if (dataJSON.archive) {
+        archiveWarn.removeAttribute("hidden");
+    } else if (!dataJSON.archive && oldData.archive) {
+        dataJSON.archive = true;
+        dataJSON.snapshotURL = oldData.snapshotURL;
+    }
+
+    btnUpdate.disabled = true;
+    btnRemove.disabled = true;
 
     const fetchURL = API_ENDPOINT + "update/" + idInDb;
     const res = await fetch(fetchURL, {
@@ -181,6 +160,9 @@ const updateEntry = async (idInDb) => {
         checkmark.removeAttribute("hidden");
         overlayText.innerHTML = "Updated&nbsp;&check;";
         overlayDiv.style.display = "block";
+        btnUpdate.disabled = false;
+        btnRemove.disabled = false;
+        archiveWarn.setAttribute("hidden", "");
         setTimeout(() => {
             checkmark.setAttribute("hidden", "");
             overlayDiv.style.display = "none";
@@ -212,9 +194,7 @@ const removeEntry = async (idInDb) => {
     }
 };
 
-btnRefetchThumbnail.addEventListener("click", () =>
-    refetchThumbnail(bmId.innerHTML),
-);
+btnRefetchThumbnail.addEventListener("click", () => refetchThumbnail(bmId.innerHTML));
 const refetchThumbnail = async (idInDb) => {
     const fetchUrl = API_ENDPOINT + "refetch-thumbnail/" + idInDb;
     const res = await fetch(fetchUrl);
@@ -235,15 +215,12 @@ const refetchThumbnail = async (idInDb) => {
     }
 };
 
+inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
+
 const resizeInput = () => {
     const input = document.querySelectorAll("input");
     for (let i = 0; i < input.length; i++) {
-        input[i].type === "text"
-            ? input[i].setAttribute(
-                  "size",
-                  input[i].getAttribute("placeholder").length,
-              )
-            : {};
+        input[i].type === "text" ? input[i].setAttribute("size", input[i].getAttribute("placeholder").length) : {};
         input[i].value = "";
     }
 };

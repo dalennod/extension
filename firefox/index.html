@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="main.js" type="text/javascript" defer></script>
-    <style> :root { --dark-mode-foreground: #232323; --dark-mode-background: #131313; --dark-mode-text: #eaeaea; --global-border-color: #aaa; --accent-color: #2f9df7; --red-text: #ff3535; } body { font-family: system-ui, Arial, sans-serif; background-color: var(--dark-mode-background); color: var(--dark-mode-text); } button { border-radius: 5px; background-color: var(--accent-color); border-color: var(--accent-color); cursor: pointer; } .centered { padding: 0px 3px 0px 3px; } .centered input[type="text"] { width: 100%; } input:focus { outline: none; } input { background: none; text-decoration: none; border-width: 0px; border-bottom: 1px dotted var(--global-border-color); color: var(--dark-mode-text); } nav { padding: 3px; background-color: var(--dark-mode-foreground); display: flex; flex-direction: row; justify-content: center; align-items: center; border-radius: 5px; } a { text-decoration: none; color: var(--dark-mode-text); } a:hover { color: var(--accent-color); } .done-overlay-div { position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 2; } .done-overlay-div > .done-overlay-text { position: absolute; top: 50%; left: 50%; font-size: 40px; color: var(--dark-mode-text); transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); } .red-text { color: var(--red-text); text-align: right; } .center-text { text-align: center; } </style>
+    <style> :root { --dark-mode-foreground: #232323; --dark-mode-background: #131313; --dark-mode-text: #eaeaea; --global-border-color: #aaa; --accent-color: #2f9df7; --red-text: #ff3535; } body { font-family: system-ui, Arial, sans-serif; background-color: var(--dark-mode-background); color: var(--dark-mode-text); } button { border-radius: 5px; background-color: var(--accent-color); border-color: var(--accent-color); cursor: pointer; } button:disabled { background-color: var(--global-border-color); border-color: var(--global-border-color); cursor: not-allowed; } .centered { padding: 0px 3px 0px 3px; } .centered input[type="text"] { width: 100%; } input[type="text"]:focus { outline: none; } input { background: none; text-decoration: none; border-width: 0px; border-bottom: 1px dotted var(--global-border-color); color: var(--dark-mode-text); } @keyframes pop { 0% { opacity: 0; } 75% { opacity: 1; } 100% { transform: scale(1.2); } } input[type="checkbox"]:checked { animation: pop 0.3s ease; } nav { padding: 3px; background-color: var(--dark-mode-foreground); display: flex; flex-direction: row; justify-content: center; align-items: center; border-radius: 5px; } a { text-decoration: none; color: var(--dark-mode-text); } a:hover { color: var(--accent-color); } .done-overlay-div { position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 2; } .done-overlay-div>.done-overlay-text { position: absolute; top: 50%; left: 50%; font-size: 40px; color: var(--dark-mode-text); transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); } .red-text { color: var(--red-text); text-align: right; } .center-text { text-align: center; } </style>
     <title>Dalennod</title>
 </head>
 
@@ -21,28 +21,18 @@
         </div>
         <div class="centered">
             <p id="bm-id" hidden>ID</p>
-            <p>
-                URL<span class="red-text">*</span>: <input type="text" id="input-url" placeholder="URL to save" required />
-            </p>
-            <p>
-                Title: <input type="text" id="input-title" placeholder="Title for the bookmark" />
-            </p>
-            <p>
-                Notes: <input type="text" id="input-note" placeholder="Log notes for bookmark" autofocus />
-            </p>
-            <p>
-                Keywords: <input type="text" id="input-keywords" placeholder="Keywords, to, search, bookmark" />
-            </p>
+            <p>URL<span class="red-text">*</span>: <input type="text" id="input-url" placeholder="URL to save" required /></p>
+            <p>Title: <input type="text" id="input-title" placeholder="Title for the bookmark" /></p>
+            <p>Notes: <input type="text" id="input-note" placeholder="Log notes for bookmark" autofocus /></p>
+            <p>Keywords: <input type="text" id="input-keywords" placeholder="Keywords, to, search, bookmark" /></p>
             <p>
                 Group: <input type="text" id="input-bmGroup" placeholder="Group to store bookmark into" list="bmGroups-list" autocomplete="off" />
                 <datalist id="bmGroups-list"></datalist>
             </p>
             <p id="radio-btn-archive">
                 Archive?:
-                <input type="radio" name="radio-archive" id="radio-yes" value="1" />
-                <label for="radio-yes">Yes</label>
-                <input type="radio" name="radio-archive" id="radio-no" value="0" checked />
-                <label for="radio-no">No</label>
+                <input type="checkbox" name="input-archive" id="input-archive" title="Check to archive" />
+                <label for="input-archive" id="input-archive-label" title="Check to archive">No</label>
             </p>
             <p class="red-text">* required</p>
             <p class="center-text">
@@ -51,7 +41,7 @@
                 <button id="button-remove-req" hidden>Remove</button>
                 <span id="checkmark" hidden>&check;</span>
                 <details id="more-options" hidden>
-                    <summary>More options:</summary><br /> 
+                    <summary>More options:</summary><br />
                     <button id="button-refetch-thumbnail">Refetch thumbnail</button>
                 </details>
                 <span class="red-text" id="archive-warn" hidden>WARN: Archiving may take few seconds to minutes. It's safe to navigate away in the meantime.</span>

@@ -8,4 +8,8 @@ Dalennod's browser extension for Firefox and Chromium.
 - Navigation to web UI by clicking on 'Dalennod' text
 
 ### Screenshot:
-![Firefox extension screenshot](/screenshot/ff-ext.png)
+<details>
+<summary>Browser Extension:</summary>
+
+![Browser extension](/screenshots/ff-ext.png)
+</details>
