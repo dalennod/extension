@@ -213,6 +213,7 @@ const refetchThumbnail = async (idInDb) => {
             overlayDiv.style.display = "none";
         }, 1000);
     }
+    checkUrl(currTab.url);
 };
 
 inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
