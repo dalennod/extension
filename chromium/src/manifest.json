@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Dalennod",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "A bookmark manager.",
     "icons": {
         "48": "icons/dalennod-48.png",
@@ -11,7 +11,7 @@
     "permissions": ["tabs"],
     "action": {
         "default_title": "Dalennod",
-        "default_popup": "index.html",
+        "default_popup": "popup.html",
         "default_icon": {
             "48": "icons/dalennod-48.png",
             "96": "icons/dalennod-96.png"

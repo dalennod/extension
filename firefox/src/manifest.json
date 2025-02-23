@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Dalennod",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "A bookmark manager.",
     "icons": {
         "48": "icons/dalennod-48.png",
@@ -15,11 +15,11 @@
             "96": "icons/dalennod-96.png"
         },
         "default_title": "Dalennod",
-        "default_popup": "index.html"
+        "default_popup": "popup.html"
     },
     "background": {
         "scripts": ["background.js"],
         "persistent": false
     },
-    "content_security_policy": "script-src 'self' main.js; object-src 'self'"
+    "content_security_policy": "script-src 'self' popup.js; object-src 'self'"
 }

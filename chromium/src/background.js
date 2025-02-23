@@ -17,19 +17,17 @@ const checkUrl = async (currTabUrl) => {
         method: "POST",
         body: JSON.stringify({ url: currTabUrl }),
     });
-    if (res.status === 404) {
-        await browser.browserAction.setIcon({ path: defaultIconPaths });
-        return;
-    }
-    await browser.browserAction.setIcon({ path: existsIconPaths });
+    if (res.status !== 404)
+        await chrome.action.setIcon({ path: existsIconPaths });
+    else
+        await chrome.action.setIcon({ path: defaultIconPaths });
 };
 
 let conn = false;
 const checkConnection = async () => {
     if (!conn) {
         try {
-            const fetchURL = API_ENDPOINT + "add/";
-            const res = await fetch(fetchURL);
+            await fetch(API_ENDPOINT + "add/");
         } catch (err) {
             conn = false;
             console.error("server not running. ERROR:", err);
@@ -42,7 +40,7 @@ const checkConnection = async () => {
 
 let currTab = "";
 const tabActivated = (activeInfo) => {
-    browser.tabs.get(activeInfo.tabId, async (tab) => {
+    chrome.tabs.get(activeInfo.tabId, async (tab) => {
         currTab = await tab.url;
         await checkConnection();
     });
@@ -55,5 +53,5 @@ const tabUpdated = async (tabId, changeInfo, tab) => {
     }
 };
 
-browser.tabs.onActivated.addListener(tabActivated);
-browser.tabs.onUpdated.addListener(tabUpdated);
+chrome.tabs.onActivated.addListener(tabActivated);
+chrome.tabs.onUpdated.addListener(tabUpdated);
