@@ -15,6 +15,7 @@ const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [ doc
 const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [ document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive"), ];
 
 window.addEventListener("load", () => {
+    resizeInput();
     getCurrTab();
     checkConnection();
 });
@@ -218,6 +219,50 @@ const refetchThumbnail = async (idInDb) => {
 
 inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
 
+let autocompleteWords = [];
+let currentSuggestion;
+inputKeywords.addEventListener("input", (event) => {
+    if (event.inputType === "deleteContentBackward" || event.inputType === "deleteContentForward")
+        return;
+    const inputText = inputKeywords.value;
+    const lastWord = inputText.split(/[\s,]+/).pop();
+    lastWord ? currentSuggestion = getSuggestion(lastWord) : null;
+    if (currentSuggestion) {
+        const cursorPosition = inputKeywords.selectionStart;
+        const newText = inputText.slice(0, inputText.length - lastWord.length) + currentSuggestion;
+        inputKeywords.value = newText;
+        inputKeywords.setSelectionRange(cursorPosition, cursorPosition + currentSuggestion.length);
+    }
+});
+
+inputKeywords.addEventListener("keydown", (event) => {
+    if (event.key === "Tab" && currentSuggestion) {
+        event.preventDefault();
+        const inputText = inputKeywords.value;
+        const lastWord = inputText.split(/[\s,]+/).pop();
+        const newText = inputText.slice(0, inputText.length - lastWord.length) + currentSuggestion;
+        inputKeywords.value = newText;
+        inputKeywords.setSelectionRange(newText.length, newText.length);
+        currentSuggestion = undefined;
+    }
+});
+
+const getSuggestion = (lastWord) => {
+    return autocompleteWords.find(word => word.startsWith(lastWord));
+}
+
+inputKeywords.addEventListener("focus", () => { gatherWords();  });
+const gatherWords = () => {
+    const minLength = 2;
+    const delim = " ";
+
+    const titleWords = [... new Set(inputTitle.value.split(delim))].filter(item => item.length > minLength);
+    const noteWords = [... new Set(inputNote.value.split(delim))].filter(item => item.length > minLength);
+
+    autocompleteWords.push(...titleWords);
+    autocompleteWords.push(...noteWords);
+};
+
 const resizeInput = () => {
     const input = document.querySelectorAll("input");
     for (let i = 0; i < input.length; i++) {
@@ -225,4 +270,3 @@ const resizeInput = () => {
         input[i].value = "";
     }
 };
-resizeInput();
