@@ -219,7 +219,6 @@ const refetchThumbnail = async (idInDb) => {
 
 inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
 
-let autocompleteWords = [];
 let currentSuggestion;
 inputKeywords.addEventListener("input", (event) => {
     if (event.inputType === "deleteContentBackward" || event.inputType === "deleteContentForward")
@@ -247,6 +246,7 @@ inputKeywords.addEventListener("keydown", (event) => {
     }
 });
 
+let autocompleteWords = [];
 const getSuggestion = (lastWord) => {
     return autocompleteWords.find(word => word.startsWith(lastWord));
 }
@@ -255,12 +255,16 @@ inputKeywords.addEventListener("focus", () => { gatherWords();  });
 const gatherWords = () => {
     const minLength = 2;
     const delim = " ";
+    autocompleteWords = [];
 
-    const titleWords = [... new Set(inputTitle.value.split(delim))].filter(item => item.length > minLength);
-    const noteWords = [... new Set(inputNote.value.split(delim))].filter(item => item.length > minLength);
-
-    autocompleteWords.push(...titleWords);
-    autocompleteWords.push(...noteWords);
+    if (inputTitle.value.length > minLength) {
+        const titleWords = [...new Set(inputTitle.value.split(delim))].filter(item => item.length > minLength);
+        autocompleteWords.push(...titleWords);
+    }
+    if (inputNote.value.length > minLength) {
+        const noteWords = [...new Set(inputNote.value.split(delim))].filter(item => item.length > minLength);
+        autocompleteWords.push(...noteWords);
+    }
 };
 
 const resizeInput = () => {
