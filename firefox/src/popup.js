@@ -1,74 +1,47 @@
+import { API_ENDPOINT } from "./module.js";
+import { existsIconPaths, defaultIconPaths } from "./module.js";
+import { checkUrl, currentTab, setCurrentTab } from "./module.js";
+
 "use strict";
 
-const API_ENDPOINT = "http://localhost:41415/api/";
-const existsIconPaths = {
-    48: "icons/exists/dalennod-exists-48.png",
-    96: "icons/exists/dalennod-exists-96.png",
-};
-const defaultIconPaths = {
-    48: "icons/dalennod-48.png",
-    96: "icons/dalennod-96.png",
-};
-
 const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("more-options"), document.getElementById("input-archive-label")];
-const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [ document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail"), ];
-const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [ document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive"), ];
+const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail")];
+const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive")];
 
 window.addEventListener("load", () => {
     resizeInput();
     getCurrTab();
-    checkConnection();
 });
 
-let currTab = "";
 const getCurrTab = () => {
     browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-        currTab = tabs[0];
-        inputUrl.value = currTab.url;
-        inputTitle.value = currTab.title;
+        setCurrentTab(tabs[0]);
+        inputUrl.value = currentTab.url;
+        inputTitle.value = currentTab.title;
+        checkUrlReq(currentTab.url);
     });
-};
-
-let conn = false;
-const checkConnection = async () => {
-    if (!conn) {
-        try {
-            const fetchURL = API_ENDPOINT + "add/";
-            const res = await fetch(fetchURL);
-            console.log(res.status, await res.text());
-        } catch (e) {
-            conn = false;
-            document.querySelector(".centered").innerHTML = `<a href="https://github.com/dalennod/dalennod" target="_blank"> <span style="text-decoration: underline;">Dalennod</span> </a>(web-server) must be running.`;
-            await browser.browserAction.setIcon({ path: defaultIconPaths });
-            return;
-        }
-        conn = true;
-    }
-    checkUrl(currTab.url);
-    await fillAllGroups();
 };
 
 let oldData = "";
-const checkUrl = async (currTabUrl) => {
-    const fetchUrl = API_ENDPOINT + "check-url/";
-    const res = await fetch(fetchUrl, {
-        method: "POST",
-        body: JSON.stringify({ url: currTabUrl }),
-    });
-    if (res.status === 404) {
+const checkUrlReq = async (url) => {
+    try {
+        const response = await checkUrl(url);
+        if (response.status === 404) {
+            await browser.browserAction.setIcon({ path: defaultIconPaths });
+        } else {
+            await browser.browserAction.setIcon({ path: existsIconPaths });
+            btnUpdate.removeAttribute("hidden");
+            btnRemove.removeAttribute("hidden");
+            btnCreate.setAttribute("hidden", "");
+            oldData = JSON.parse(JSON.stringify(await response.json()));
+            fillData(oldData);
+        }
+    } catch (err) {
+        document.querySelector(".centered").innerHTML = "<p class=\"center-text\"><a href=\"https://github.com/dalennod/dalennod\" target=\"_blank\"> <span style=\"text-decoration: underline;\">Dalennod</span> </a>(web-server) must be running.</p>";
         await browser.browserAction.setIcon({ path: defaultIconPaths });
-    } else {
-        const receviedData = await res.json();
-
-        btnUpdate.removeAttribute("hidden");
-        btnRemove.removeAttribute("hidden");
-        btnCreate.setAttribute("hidden", "");
-        oldData = JSON.parse(JSON.stringify(receviedData));
-        fillData(oldData);
-
-        await browser.browserAction.setIcon({ path: existsIconPaths });
+        return;
     }
-    return;
+    await fillAllGroups();
 };
 
 const fillData = (dataFromDb) => {
@@ -85,8 +58,7 @@ const fillData = (dataFromDb) => {
 const fillAllGroups = async () => {
     const fetchUrl = API_ENDPOINT + "groups/";
     const res = await fetch(fetchUrl);
-    const allGroups = await res.text();
-    bmGroupsList.innerHTML = allGroups;
+    bmGroupsList.innerHTML = await res.text();
 };
 
 btnCreate.addEventListener("click", () => addEntry());
@@ -126,7 +98,7 @@ const addEntry = async () => {
             window.close();
         }, 1000);
 
-        checkUrl(dataJSON.url);
+        checkUrlReq(dataJSON.url);
     }
 };
 
@@ -170,7 +142,7 @@ const updateEntry = async (idInDb) => {
             window.close();
         }, 1000);
 
-        checkUrl(dataJSON.url);
+        checkUrlReq(dataJSON.url);
     }
 };
 
@@ -191,7 +163,7 @@ const removeEntry = async (idInDb) => {
             window.close();
         }, 1000);
 
-        checkUrl(currTab.url);
+        checkUrlReq(currentTab.url);
     }
 };
 
@@ -214,7 +186,7 @@ const refetchThumbnail = async (idInDb) => {
             overlayDiv.style.display = "none";
         }, 1000);
     }
-    checkUrl(currTab.url);
+    checkUrlReq(currentTab.url);
 };
 
 inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
