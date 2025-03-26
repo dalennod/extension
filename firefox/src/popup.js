@@ -48,6 +48,7 @@ const fillData = (dataFromDb) => {
     bmId.innerHTML = dataFromDb.id;
     inputUrl.value = dataFromDb.url;
     inputTitle.value = dataFromDb.title;
+    if (dataFromDb.note) inputNote.value = dataFromDb.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
     inputNote.value = dataFromDb.note;
     inputKeywords.value = dataFromDb.keywords;
     inputBmGroup.value = dataFromDb.bmGroup;
