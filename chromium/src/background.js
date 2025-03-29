@@ -1,5 +1,5 @@
 import { existsIconPaths, defaultIconPaths } from "./module.js";
-import { checkUrl, setCurrentTab } from "./module.js";
+import { checkUrl, setCurrentTab, storeWebAddr, getAPIEndpoint } from "./module.js";
 
 "use strict";
 
@@ -16,6 +16,7 @@ const tabUpdated = async (tabId, changeInfo, tab) => {
 };
 
 const setIcon = async () => {
+    if (await getAPIEndpoint() === undefined) await storeWebAddr();
     const response = await checkUrl();
     if (response.status === 404) await chrome.action.setIcon({ path: defaultIconPaths });
     else                         await chrome.action.setIcon({ path: existsIconPaths  });

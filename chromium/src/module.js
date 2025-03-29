@@ -1,5 +1,14 @@
 "use strict";
 
+const storeWebAddr = async (webAddr) => {
+    const defaultWebAddr = "http://localhost:41415";
+    if ((await chrome.storage.local.get("web_addr")).web_addr === undefined) await chrome.storage.local.set({ "web_addr": defaultWebAddr });
+    else {
+        if (webAddr === "" || webAddr === undefined) await chrome.storage.local.set({ "web_addr": defaultWebAddr });
+        else await chrome.storage.local.set({ "web_addr": webAddr });
+    }
+}
+
 const getAPIEndpoint = async () => {
     const webAddr = await chrome.storage.local.get("web_addr");
     if   (webAddr.web_addr === undefined) return;
@@ -30,4 +39,4 @@ const checkUrl = async (url = currentTab) => {
     return r;
 };
 
-export { getAPIEndpoint, existsIconPaths, defaultIconPaths, currentTab, setCurrentTab, checkUrl };
+export { storeWebAddr, getAPIEndpoint, existsIconPaths, defaultIconPaths, currentTab, setCurrentTab, checkUrl };

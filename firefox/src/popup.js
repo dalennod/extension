@@ -12,7 +12,13 @@ window.addEventListener("load", async () => {
     API_ENDPOINT = await getAPIEndpoint();
     resizeInput();
     getCurrTab();
+    setUILink();
 });
+
+const setUILink = () => {
+    const a = document.querySelectorAll("nav a");
+    a.forEach((item) => item.href = API_ENDPOINT.slice(0, -5));
+};
 
 const getCurrTab = () => {
     browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {

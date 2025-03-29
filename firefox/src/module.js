@@ -1,5 +1,14 @@
 "use strict";
 
+const storeWebAddr = async (webAddr) => {
+    const defaultWebAddr = "http://localhost:41415";
+    if ((await browser.storage.local.get("web_addr")).web_addr === undefined) await browser.storage.local.set({ "web_addr": defaultWebAddr });
+    else {
+        if (webAddr === "" || webAddr === undefined) await browser.storage.local.set({ "web_addr": defaultWebAddr });
+        else await browser.storage.local.set({ "web_addr": webAddr });
+    }
+};
+
 const getAPIEndpoint = async () => {
     const webAddr = await browser.storage.local.get("web_addr");
     if   (webAddr.web_addr === undefined) return;
@@ -10,6 +19,7 @@ const existsIconPaths = {
     48: "icons/exists/dalennod-exists-48.png",
     96: "icons/exists/dalennod-exists-96.png",
 };
+
 const defaultIconPaths = {
     48: "icons/dalennod-48.png",
     96: "icons/dalennod-96.png",
@@ -30,4 +40,4 @@ const checkUrl = async (url = currentTab) => {
     return r;
 };
 
-export { getAPIEndpoint, existsIconPaths, defaultIconPaths, currentTab, setCurrentTab, checkUrl };
+export { storeWebAddr, getAPIEndpoint, existsIconPaths, defaultIconPaths, currentTab, setCurrentTab, checkUrl };

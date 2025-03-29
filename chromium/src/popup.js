@@ -4,15 +4,21 @@ import { getAPIEndpoint, checkUrl, currentTab, setCurrentTab } from "./module.js
 "use strict";
 
 const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("more-options"), document.getElementById("input-archive-label")];
-const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [ document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail"), ];
-const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [ document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive"), ];
+const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail")];
+const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive")];
 
 let API_ENDPOINT;
 window.addEventListener("load", async () => {
     API_ENDPOINT = await getAPIEndpoint();
     resizeInput();
     getCurrTab();
+    setUILink();
 });
+
+const setUILink = () => {
+    const a = document.querySelectorAll("nav a");
+    a.forEach((item) => item.href = API_ENDPOINT.slice(0, -5));
+};
 
 const getCurrTab = () => {
     chrome.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
