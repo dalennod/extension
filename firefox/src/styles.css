@@ -6,31 +6,38 @@
     --accent-color: #2f9df7;
     --red-text: #ff3535;
 }
+
 body {
     font-family: system-ui, Arial, sans-serif;
     background-color: var(--dark-mode-background);
     color: var(--dark-mode-text);
 }
+
 button {
     border-radius: 2px;
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     cursor: pointer;
 }
+
 button:disabled {
     background-color: var(--global-border-color);
     border-color: var(--global-border-color);
     cursor: not-allowed;
 }
+
 .centered {
     padding: 0px 3px 0px 3px;
 }
+
 .centered input[type="text"], textarea {
     width: 100%;
 }
+
 input[type="text"]:focus, textarea:focus {
     outline: none;
 }
+
 input, textarea {
     background: none;
     text-decoration: none;
@@ -39,24 +46,22 @@ input, textarea {
     color: var(--dark-mode-text);
     font-size: 0.83em;
 }
+
 textarea {
     resize: vertical;
     font-family: inherit;
 }
+
 @keyframes pop {
-    0% {
-        opacity: 0;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.2);
-    }
+    0% { opacity: 0; }
+    75% { opacity: 1; }
+    100% { transform: scale(1.2); }
 }
+
 input[type="checkbox"]:checked {
     animation: pop 0.3s ease;
 }
+
 nav {
     padding: 3px;
     background-color: var(--dark-mode-foreground);
@@ -66,13 +71,16 @@ nav {
     align-items: center;
     border-radius: 2px;
 }
+
 a {
     text-decoration: none;
     color: var(--dark-mode-text);
 }
+
 a:hover {
     color: var(--accent-color);
 }
+
 .done-overlay-div {
     position: fixed;
     display: none;
@@ -85,6 +93,7 @@ a:hover {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
+
 .done-overlay-div > .done-overlay-text {
     position: absolute;
     top: 50%;
@@ -94,10 +103,12 @@ a:hover {
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
+
 .red-text {
     color: var(--red-text);
     text-align: right;
 }
+
 .center-text {
     text-align: center;
 }

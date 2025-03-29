@@ -14,9 +14,9 @@ body {
     font-family: system-ui, Arial, sans-serif;
     background-color: var(--dark-mode-background);
     color: var(--dark-mode-text);
+    font-size: 1.05em;
 }
 body * {
-    font-size: 1.05em;
     box-sizing: border-box;
 }
 button {
@@ -33,29 +33,30 @@ button:disabled {
 .centered {
     padding: 0px 3px 0px 3px;
 }
-.centered input[type="text"] {
+.centered input[type="text"], textarea {
     width: 100%;
 }
-input[type="text"]:focus {
+input[type="text"]:focus, textarea {
     outline: none;
 }
-input {
+input, textarea {
     background: none;
     text-decoration: none;
     border-width: 0px;
     border-bottom: 1px dotted var(--global-border-color);
     color: var(--dark-mode-text);
+    font-size: 0.83em;
 }
+
+textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
 @keyframes pop {
-    0% {
-        opacity: 0;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.2);
-    }
+    0% { opacity: 0; }
+    75% { opacity: 1; }
+    100% {transform: scale(1.2); }
 }
 input[type="checkbox"]:checked {
     animation: pop 0.3s ease;

@@ -1,4 +1,3 @@
-import { API_ENDPOINT } from "./module.js";
 import { existsIconPaths, defaultIconPaths } from "./module.js";
 import { checkUrl, setCurrentTab } from "./module.js";
 
@@ -10,6 +9,7 @@ const tabActivated = (activeInfo) => {
         await setIcon();
     });
 };
+
 const tabUpdated = async (tabId, changeInfo, tab) => {
     if (changeInfo.url) setCurrentTab(await tab.url);
     await setIcon();

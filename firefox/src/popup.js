@@ -1,6 +1,5 @@
-import { API_ENDPOINT } from "./module.js";
 import { existsIconPaths, defaultIconPaths } from "./module.js";
-import { checkUrl, currentTab, setCurrentTab } from "./module.js";
+import { getAPIEndpoint, checkUrl, currentTab, setCurrentTab } from "./module.js";
 
 "use strict";
 
@@ -8,7 +7,9 @@ const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabe
 const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail")];
 const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive")];
 
-window.addEventListener("load", () => {
+let API_ENDPOINT;
+window.addEventListener("load", async () => {
+    API_ENDPOINT = await getAPIEndpoint();
     resizeInput();
     getCurrTab();
 });

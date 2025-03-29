@@ -1,7 +1,7 @@
 "use strict";
 
 const getAPIEndpoint = async () => {
-    const webAddr = await browser.storage.local.get("web_addr");
+    const webAddr = await chrome.storage.local.get("web_addr");
     if   (webAddr.web_addr === undefined) return;
     else return webAddr.web_addr + "/api/";
 };

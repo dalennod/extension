@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dalennod Options</title>
+    <style>
+      body {
+          font-family: -system-ui, Arial, sans-serif;
+          background: #fff;
+          color: #000;
+      }
+
+      body * {
+          box-sizing: border-box;
+          font-size: 1.1em;
+      }
+
+      input {
+          background: none;
+          color: inherit;
+          padding: 5px;
+          margin-top: 5px;
+          /* font-size: 0.83em; */
+          border: none;
+          border-bottom: 1px solid #2f9df7;
+          outline: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+          body {
+              background: #23212a;
+              color: #fff;
+          }
+      }
+    </style>
+  </head>
+  <body>
+    <p>---------------</p>
+
+    <p>
+      <strong>Dalennod web-server address:</strong><br>
+      <input type="url" id="web-addr" value="http://localhost:41415" placeholder="http://localhost:41415" required>
+    </p>
+
+    <script src="options.js" type="text/javascript" defer></script>
+  </body>
+</html>
