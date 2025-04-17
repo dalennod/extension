@@ -24,3 +24,4 @@ const setIcon = async () => {
 
 browser.tabs.onActivated.addListener(tabActivated);
 browser.tabs.onUpdated.addListener(tabUpdated);
+browser.runtime.onInstalled.addListener(storeWebAddr);

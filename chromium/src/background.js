@@ -24,3 +24,4 @@ const setIcon = async () => {
 
 chrome.tabs.onActivated.addListener(tabActivated);
 chrome.tabs.onUpdated.addListener(tabUpdated);
+chrome.runtime.onInstalled.addListener(storeWebAddr);
