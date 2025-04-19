@@ -2,6 +2,8 @@
 
 Dalennod's web extension for Firefox and Chromium browsers.
 
+[![Get the Addon](./screenshot/icon/firefox.png)](https://addons.mozilla.org/en-US/firefox/addon/dalennod)
+
 ### Features:
 
 - Create, update and delete bookmarks directly from the extension
