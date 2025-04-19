@@ -52,7 +52,7 @@ const checkUrlReq = async (url) => {
 };
 
 const fillData = (dataFromDb) => {
-    bmId.innerHTML = dataFromDb.id;
+    bmId.innerText = dataFromDb.id;
     inputUrl.value = dataFromDb.url;
     inputTitle.value = dataFromDb.title;
     if (dataFromDb.note) inputNote.value = dataFromDb.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
@@ -66,7 +66,17 @@ const fillData = (dataFromDb) => {
 const fillAllGroups = async () => {
     const fetchUrl = API_ENDPOINT + "groups/";
     const res = await fetch(fetchUrl);
-    bmGroupsList.innerHTML = await res.text();
+    // bmGroupsList.innerHTML = await res.text();
+    const groups = await res.text();
+    const groups_split = groups.split("\"");
+
+    for (let i = 0; i < groups_split.length; ++i) {
+        if (i % 2 === 1) {
+            const option_element = document.createElement("option");
+            option_element.value = groups_split[i];
+            bmGroupsList.appendChild(option_element);
+        }
+    }
 };
 
 btnCreate.addEventListener("click", () => addEntry());
