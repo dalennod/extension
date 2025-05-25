@@ -11,7 +11,7 @@ const storeWebAddr = async (webAddr) => {
 
 const getAPIEndpoint = async () => {
     const webAddr = await chrome.storage.local.get("web_addr");
-    if   (webAddr.web_addr === undefined) return;
+    if   (webAddr.web_addr === undefined || typeof(webAddr.web_addr) === "object") return;
     else return webAddr.web_addr + "/api/";
 };
 

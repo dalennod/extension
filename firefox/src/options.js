@@ -5,7 +5,7 @@ import { storeWebAddr } from "./module.js";
 const webAddr = document.getElementById("web-addr");
 
 const updateUI = (settings) => {
-    if (settings.web_addr === undefined || settings.web_addr === "") {
+    if (settings.web_addr === undefined || settings.web_addr === "" || typeof(settings.web_addr) === "object") {
         storeWebAddr(webAddr.value);
         return;
     };
