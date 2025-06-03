@@ -2,7 +2,7 @@
 
 Dalennod's web extension for Firefox and Chromium browsers.
 
-[![Get the Addon](./images/amo/get-the-add-on.png)](https://addons.mozilla.org/en-US/firefox/addon/dalennod)
+[![Get the Addon](./images/amo/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/dalennod)
 
 ## Features:
 
