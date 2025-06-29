@@ -5,7 +5,7 @@ import { getAPIEndpoint, checkUrl, currentTab, setCurrentTab } from "./module.js
 
 const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("more-options"), document.getElementById("input-archive-label")];
 const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail")];
-const [bmId, inputUrl, inputTitle, inputNote, inputKeywords, inputBmGroup, bmGroupsList, inputArchive] = [document.getElementById("bm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-bmGroup"), document.getElementById("bmGroups-list"), document.getElementById("input-archive")];
+const [bkmID, inputUrl, inputTitle, inputNote, inputKeywords, inputCategory, categoriesList, inputArchive] = [document.getElementById("bkm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-category"), document.getElementById("categories-list"), document.getElementById("input-archive")];
 
 let API_ENDPOINT;
 window.addEventListener("load", async () => {
@@ -48,33 +48,33 @@ const checkUrlReq = async (url) => {
         await browser.browserAction.setIcon({ path: defaultIconPaths });
         return;
     }
-    await fillAllGroups();
+    await fillAllCategories();
 };
 
 const fillData = (dataFromDb) => {
-    bmId.innerText = dataFromDb.id;
+    bkmID.innerText = dataFromDb.id;
     inputUrl.value = dataFromDb.url;
     inputTitle.value = dataFromDb.title;
     if (dataFromDb.note) inputNote.value = dataFromDb.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
     inputNote.value = dataFromDb.note;
     inputKeywords.value = dataFromDb.keywords;
-    inputBmGroup.value = dataFromDb.bmGroup;
+    inputCategory.value = dataFromDb.category;
     dataFromDb.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
     dataFromDb.byteThumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
 };
 
-const fillAllGroups = async () => {
-    const fetchUrl = API_ENDPOINT + "groups/";
+const fillAllCategories = async () => {
+    const fetchUrl = API_ENDPOINT + "categories/";
     const res = await fetch(fetchUrl);
-    // bmGroupsList.innerHTML = await res.text();
-    const groups = await res.text();
-    const groups_split = groups.split("\"");
+    // categoriesList.innerHTML = await res.text();
+    const categories = await res.text();
+    const categories_split = categories.split("\"");
 
-    for (let i = 0; i < groups_split.length; ++i) {
+    for (let i = 0; i < categories_split.length; ++i) {
         if (i % 2 === 1) {
             const option_element = document.createElement("option");
-            option_element.value = groups_split[i];
-            bmGroupsList.appendChild(option_element);
+            option_element.value = categories_split[i];
+            categoriesList.appendChild(option_element);
         }
     }
 };
@@ -86,7 +86,7 @@ const addEntry = async () => {
         title: inputTitle.value,
         note: inputNote.value,
         keywords: inputKeywords.value,
-        bmGroup: inputBmGroup.value,
+        category: inputCategory.value,
         archive: inputArchive.checked ? true : false,
     };
 
@@ -120,14 +120,14 @@ const addEntry = async () => {
     }
 };
 
-btnUpdate.addEventListener("click", () => updateEntry(bmId.innerHTML));
+btnUpdate.addEventListener("click", () => updateEntry(bkmID.innerHTML));
 const updateEntry = async (idInDb) => {
     const dataJSON = {
         url: inputUrl.value,
         title: inputTitle.value,
         note: inputNote.value,
         keywords: inputKeywords.value,
-        bmGroup: inputBmGroup.value,
+        category: inputCategory.value,
         archive: inputArchive.checked ? true : false,
     };
 
@@ -164,7 +164,7 @@ const updateEntry = async (idInDb) => {
     }
 };
 
-btnRemove.addEventListener("dblclick", () => removeEntry(bmId.innerHTML));
+btnRemove.addEventListener("dblclick", () => removeEntry(bkmID.innerHTML));
 const removeEntry = async (idInDb) => {
     const fetchURL = API_ENDPOINT + "delete/" + idInDb;
     const res = await fetch(fetchURL);
@@ -185,7 +185,7 @@ const removeEntry = async (idInDb) => {
     }
 };
 
-btnRefetchThumbnail.addEventListener("click", () => refetchThumbnail(bmId.innerHTML));
+btnRefetchThumbnail.addEventListener("click", () => refetchThumbnail(bkmID.innerHTML));
 const refetchThumbnail = async (idInDb) => {
     const fetchUrl = API_ENDPOINT + "refetch-thumbnail/" + idInDb;
     const res = await fetch(fetchUrl);
@@ -247,12 +247,12 @@ const gatherWords = () => {
     const delim = " ";
     autocompleteWords = [];
 
-    if (inputTitle.value.length > minLength) {
-        const titleWords = [...new Set(inputTitle.value.split(delim))].filter(item => item.length > minLength);
+    if (inputTitle.value.length >= minLength) {
+        const titleWords = [...new Set(inputTitle.value.split(delim))].filter(item => item.length >= minLength);
         autocompleteWords.push(...titleWords);
     }
-    if (inputNote.value.length > minLength) {
-        const noteWords = [...new Set(inputNote.value.split(delim))].filter(item => item.length > minLength);
+    if (inputNote.value.length >= minLength) {
+        const noteWords = [...new Set(inputNote.value.split(delim))].filter(item => item.length >= minLength);
         autocompleteWords.push(...noteWords);
     }
 };
