@@ -13,6 +13,7 @@ window.addEventListener("load", async () => {
     resizeInput();
     getCurrTab();
     setUILink();
+    adjustTextarea(inputNote);
 });
 
 const setUILink = () => {
@@ -67,6 +68,8 @@ const fillAllCategories = async () => {
     const fetchUrl = API_ENDPOINT + "categories/";
     const res = await fetch(fetchUrl);
     // categoriesList.innerHTML = await res.text();
+
+    // Have to do this to pass web-ext.js check
     const categories = await res.text();
     const categories_split = categories.split("\"");
 
@@ -259,8 +262,32 @@ const gatherWords = () => {
 
 const resizeInput = () => {
     const input = document.querySelectorAll("input");
+    // const inputPlaceholder = document.querySelectorAll(".input-placeholder");
+
+    // Longest placeholder's string length + random number that looks good
+    let biggestValue = 35;
+    // for (let i = 0; i < inputPlaceholder.length; i++) {
+    //     if (inputPlaceholder[i].innerText.length > biggestValue) {
+    //         biggestValue = inputPlaceholder[i].innerText.length;
+    //     }
+    // }
     for (let i = 0; i < input.length; i++) {
-        input[i].type === "text" ? input[i].setAttribute("size", input[i].getAttribute("placeholder").length) : {};
+        input[i].setAttribute("size", biggestValue);
         input[i].value = "";
+        console.log(input[i], input[i].getAttribute("size"));
     }
+};
+
+const adjustTextarea = (tar) => {
+    // 8 = right/left padding of textarea
+    const paddingRL = 8;
+    tar.value.includes("\n")
+        ? tar.style.height = (tar.scrollHeight + paddingRL) + "px"
+        : tar.style.height = tar.scrollHeight + "px";
+    tar.addEventListener("input", () => {
+        tar.style.height = "auto";
+        tar.value.includes("\n")
+            ? tar.style.height = (tar.scrollHeight + paddingRL) + "px"
+            : tar.style.height = tar.scrollHeight + "px";
+    });
 };
