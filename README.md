@@ -15,7 +15,9 @@ Dalennod's web extension for Firefox and Chromium browsers.
 ## Screenshot:
 
 ### Browser Extension:
-![Browser extension](./images/extension-popup.png)
+![Browser extension](./images/firefox-popup-update-remove.png)
+
+More images ![here](./images).
 
 ### Options Page:
 ![Options Page](./images/options.png)
