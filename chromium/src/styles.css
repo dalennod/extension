@@ -14,7 +14,7 @@ body {
     font-family: system-ui, Arial, sans-serif;
     background-color: var(--dark-mode-background);
     color: var(--dark-mode-text);
-    font-size: 1.05em;
+    font-size: 1.05rem;
 }
 body * {
     box-sizing: border-box;
@@ -45,7 +45,7 @@ input, textarea {
     border-width: 0px;
     border-bottom: 1px dotted var(--global-border-color);
     color: var(--dark-mode-text);
-    font-size: 0.83em;
+    font-size: 0.83rem;
 }
 
 textarea {

@@ -1,52 +1,52 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css">
     <script src="popup.js" type="module" defer></script>
     <title>Dalennod</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        <a href="http://localhost:41415" target="_blank">
-            <img src="icons/dalennod-96.png" alt="dalennod" width="38" height="38" />&nbsp;
-        </a>
-        <a href="http://localhost:41415" target="_blank"><h3>Dalennod</h3></a>
+      <a href="http://localhost:41415" target="_blank">
+        <img src="icons/dalennod-96.png" alt="dalennod" width="38" height="38" />&nbsp;
+      </a>
+      <a href="http://localhost:41415" target="_blank"><h3>Dalennod</h3></a>
     </nav>
     <main>
-        <div class="done-overlay-div" id="done-overlay-div">
-            <span class="done-overlay-text" id="done-overlay-text"></span>
-        </div>
-        <div class="centered">
-            <p id="bkm-id" hidden>ID</p>
-            <p>URL<span class="red-text">*</span>: <input type="text" id="input-url" placeholder="URL to save" required /></p>
-            <p>Title: <input type="text" id="input-title" placeholder="Title for the bookmark" /></p>
-            <p>Notes: <br><textarea id="input-note" placeholder="Log notes for bookmark" autofocus></textarea></p>
-            <p>Keywords: <input type="text" id="input-keywords" placeholder="Keywords, to, search, bookmark" /></p>
-            <p>
-                Category: <input type="text" id="input-category" placeholder="Category to store bookmark into" list="categories-list" autocomplete="off" />
-                <datalist id="categories-list"></datalist>
-            </p>
-            <p id="radio-btn-archive">
-                Archive?:
-                <input type="checkbox" name="input-archive" id="input-archive" title="Check to archive" />
-                <label for="input-archive" id="input-archive-label" title="Check to archive">No</label>
-            </p>
-            <p class="red-text">* required</p>
-            <p class="center-text">
-                <button id="button-add-req">Create</button>
-                <button id="button-update-req" hidden>Update</button>
-                <button id="button-remove-req" hidden>Remove</button>
-                <span id="checkmark" hidden>&check;</span>
-                <details id="more-options" hidden>
-                    <summary>More options:</summary><br />
-                    <button id="button-refetch-thumbnail">Refetch thumbnail</button>
-                </details>
-                <span class="red-text" id="archive-warn" hidden>WARN: Archiving may take few seconds to minutes. It's safe to navigate away in the meantime.</span>
-            </p>
-        </div>
+      <div class="done-overlay-div" id="done-overlay-div">
+        <span class="done-overlay-text" id="done-overlay-text"></span>
+      </div>
+      <div class="centered">
+        <p id="bkm-id" hidden>ID</p>
+        <p>URL<span class="red-text">*</span>: <input type="text" id="input-url" placeholder="URL to save" required /></p>
+        <p>Title: <input type="text" id="input-title" placeholder="Title for the bookmark" /></p>
+        <p>Notes: <br><textarea id="input-note" placeholder="Log notes for bookmark" autofocus></textarea></p>
+        <p>Keywords: <input type="text" id="input-keywords" placeholder="Keywords, to, search, bookmark" /></p>
+        <p>
+          Category: <input type="text" id="input-category" placeholder="Category to store bookmark into" list="categories-list" autocomplete="off" />
+          <datalist id="categories-list"></datalist>
+        </p>
+        <p id="radio-btn-archive">
+          Archive?:
+          <input type="checkbox" name="input-archive" id="input-archive" title="Check to archive" />
+          <label for="input-archive" id="input-archive-label" title="Check to archive">No</label>
+        </p>
+        <p class="red-text">* required</p>
+        <p class="center-text">
+          <button id="button-add-req">Create</button>
+          <button id="button-update-req" hidden>Update</button>
+          <button id="button-remove-req" hidden>Remove</button>
+          <span id="checkmark" hidden>&check;</span>
+          <details id="more-options" class="pad-like-p" hidden>
+            <summary class="pad-like-p">More options:</summary>
+            <button id="button-refetch-thumbnail">Refetch thumbnail</button>
+          </details>
+          <span class="red-text" id="archive-warn" hidden>WARN: Archiving may take few seconds to minutes. It's safe to navigate away in the meantime.</span>
+        </p>
+      </div>
     </main>
-</body>
+  </body>
 </html>

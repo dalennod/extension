@@ -59,7 +59,7 @@ const fillData = (dataFromDb) => {
     inputKeywords.value = dataFromDb.keywords;
     inputCategory.value = dataFromDb.category;
     dataFromDb.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
-    dataFromDb.byteThumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
+    dataFromDb.thumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
 };
 
 const fillAllCategories = async () => {
