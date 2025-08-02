@@ -16,6 +16,26 @@ window.addEventListener("load", async () => {
     adjustTextarea(inputNote);
 });
 
+let bkmSaveState = false;
+const POPUP_STATE_KEY = "popup_state";
+window.addEventListener("visibilitychange", () => {
+    if (bkmSaveState) {
+        localStorage.removeItem(POPUP_STATE_KEY);
+        return;
+    }
+    if (document.visibilityState === "hidden") {
+        const inputs = document.querySelectorAll("input, textarea");
+        const state = {
+            inputs: Array.from(inputs).reduce((obj, el) => {
+                obj[el.id] = el.value;
+                return obj;
+            }, {}),
+            bkmSaveState: bkmSaveState
+        };
+        localStorage.setItem(POPUP_STATE_KEY, JSON.stringify(state));
+    }
+});
+
 const setUILink = () => {
     const a = document.querySelectorAll("nav a");
     a.forEach((item) => item.href = API_ENDPOINT.slice(0, -5));
@@ -36,6 +56,7 @@ const checkUrlReq = async (url) => {
         const response = await checkUrl(url);
         if (response.status === 404) {
             await browser.browserAction.setIcon({ path: defaultIconPaths });
+            fillDataFromSavedState();
         } else {
             await browser.browserAction.setIcon({ path: existsIconPaths });
             btnUpdate.removeAttribute("hidden");
@@ -52,16 +73,39 @@ const checkUrlReq = async (url) => {
     await fillAllCategories();
 };
 
-const fillData = (dataFromDb) => {
-    bkmID.innerText = dataFromDb.id;
-    inputUrl.value = dataFromDb.url;
-    inputTitle.value = dataFromDb.title;
-    if (dataFromDb.note) inputNote.value = dataFromDb.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
-    inputNote.value = dataFromDb.note;
-    inputKeywords.value = dataFromDb.keywords;
-    inputCategory.value = dataFromDb.category;
-    dataFromDb.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
-    dataFromDb.thumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
+const fillDataFromSavedState = () => {
+    const savedState = localStorage.getItem(POPUP_STATE_KEY);
+    if (savedState) {
+        const state = JSON.parse(savedState);
+        if (state.bkmSaveState || state.inputs["input-url"] !== inputUrl.value) {
+            return false;
+        }
+
+        for (let [id, value] of Object.entries(state.inputs)) {
+            const el = document.getElementById(id);
+            if (el) el.value = value;
+        }
+        inputNote.style.height = "auto";
+        inputNote.style.height = inputNote.scrollHeight + "px";
+        return true;
+    }
+    return false;
+}
+
+const fillData = (dataFromDB) => {
+    bkmID.innerText = dataFromDB.id;
+    if (!fillDataFromSavedState()) {
+        bkmID.innerText = dataFromDB.id;
+        inputUrl.value = dataFromDB.url;
+        inputTitle.value = dataFromDB.title;
+        if (dataFromDB.note) inputNote.value = dataFromDB.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
+        inputNote.value = dataFromDB.note;
+        inputKeywords.value = dataFromDB.keywords;
+        inputCategory.value = dataFromDB.category;
+        dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
+        dataFromDB.thumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
+    }
+    return;
 };
 
 const fillAllCategories = async () => {
@@ -116,6 +160,7 @@ const addEntry = async () => {
         setTimeout(() => {
             checkmark.setAttribute("hidden", "");
             overlayDiv.style.display = "none";
+            bkmSaveState = true;
             window.close();
         }, 1000);
 
@@ -133,6 +178,9 @@ const updateEntry = async (idInDb) => {
         category: inputCategory.value,
         archive: inputArchive.checked ? true : false,
     };
+
+    console.log(dataJSON);
+    console.log(idInDb);
 
     if (dataJSON.archive) {
         archiveWarn.removeAttribute("hidden");
@@ -160,6 +208,7 @@ const updateEntry = async (idInDb) => {
         setTimeout(() => {
             checkmark.setAttribute("hidden", "");
             overlayDiv.style.display = "none";
+            bkmSaveState = true;
             window.close();
         }, 1000);
 
@@ -181,6 +230,7 @@ const removeEntry = async (idInDb) => {
         setTimeout(() => {
             checkmark.setAttribute("hidden", "");
             overlayDiv.style.display = "none";
+            bkmSaveState = true;
             window.close();
         }, 1000);
 
@@ -274,7 +324,6 @@ const resizeInput = () => {
     for (let i = 0; i < input.length; i++) {
         input[i].setAttribute("size", biggestValue);
         input[i].value = "";
-        console.log(input[i], input[i].getAttribute("size"));
     }
 };
 

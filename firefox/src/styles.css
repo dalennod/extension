@@ -1,9 +1,9 @@
 :root {
     --dark-mode-foreground : #232323;
-    --dark-mode-background : #131313;
+    --dark-mode-background : #121212;
     --dark-mode-text       : 238, 238, 238;
     --global-border-color  : #aaaaaa;
-    --accent-color         : #2f9df7;
+    --accent-color         : #1abbe9;
     --red-text             : #ff3535;
 }
 
@@ -24,6 +24,7 @@ body * {
 
 button {
     border-radius: 1%;
+    color: #000000;
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     cursor: pointer;
