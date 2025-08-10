@@ -103,7 +103,6 @@ const fillData = (dataFromDB) => {
         inputKeywords.value = dataFromDB.keywords;
         inputCategory.value = dataFromDB.category;
         dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
-        dataFromDB.thumbURL ? moreOptions.setAttribute("hidden", "") : moreOptions.removeAttribute("hidden");
     }
     return;
 };
@@ -236,28 +235,6 @@ const removeEntry = async (idInDb) => {
 
         checkUrlReq(currentTab.url);
     }
-};
-
-btnRefetchThumbnail.addEventListener("click", () => refetchThumbnail(bkmID.innerHTML));
-const refetchThumbnail = async (idInDb) => {
-    const fetchUrl = API_ENDPOINT + "refetch-thumbnail/" + idInDb;
-    const res = await fetch(fetchUrl);
-    if (res.ok) {
-        overlayText.innerHTML = "Refetched thumbnail&nbsp;&check;";
-        overlayDiv.style.display = "block";
-        setTimeout(() => {
-            overlayDiv.style.display = "none";
-            moreOptions.setAttribute("hidden", "");
-        }, 1000);
-    } else {
-        console.log("error refetching thumbnail. STATUS:", res.status);
-        overlayText.innerHTML = "Failed&nbsp;&cross;";
-        overlayDiv.style.display = "block";
-        setTimeout(() => {
-            overlayDiv.style.display = "none";
-        }, 1000);
-    }
-    checkUrlReq(currentTab.url);
 };
 
 inputArchive.addEventListener("click", () => { inputArchive.checked ? archiveLabel.innerText = "Yes" : archiveLabel.innerText = "No"; });
