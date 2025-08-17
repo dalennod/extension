@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Dalennod",
-    "version": "0.5.0",
+    "version": "0.4.2",
     "description": "A bookmark manager.",
     "icons": {
         "48": "icons/dalennod-48.png",

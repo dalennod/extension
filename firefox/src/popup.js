@@ -3,8 +3,8 @@ import { getAPIEndpoint, checkUrl, currentTab, setCurrentTab } from "./module.js
 
 "use strict";
 
-const [overlayDiv, overlayText, checkmark, archiveWarn, moreOptions, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("more-options"), document.getElementById("input-archive-label")];
-const [btnCreate, btnUpdate, btnRemove, btnArchive, btnRefetchThumbnail] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive"), document.getElementById("button-refetch-thumbnail")];
+const [overlayDiv, overlayText, checkmark, archiveWarn, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("input-archive-label")];
+const [btnCreate, btnUpdate, btnRemove, btnArchive] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive")];
 const [bkmID, inputUrl, inputTitle, inputNote, inputKeywords, inputCategory, categoriesList, inputArchive] = [document.getElementById("bkm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-category"), document.getElementById("categories-list"), document.getElementById("input-archive")];
 
 let API_ENDPOINT;
