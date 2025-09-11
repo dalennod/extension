@@ -11,8 +11,10 @@ const tabActivated = (activeInfo) => {
 };
 
 const tabUpdated = async (tabId, changeInfo, tab) => {
-    if (changeInfo.url) setCurrentTab(await tab.url);
-    await setIcon();
+    if (changeInfo.url && tab.active) {
+        setCurrentTab(await tab.url);
+        await setIcon();
+    }
 };
 
 const setIcon = async () => {
