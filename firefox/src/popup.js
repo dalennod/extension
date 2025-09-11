@@ -163,6 +163,8 @@ const addEntry = async () => {
             window.close();
         }, 1000);
 
+        localStorage.removeItem(POPUP_STATE_KEY);
+
         checkUrlReq(dataJSON.url);
     }
 };
@@ -211,6 +213,8 @@ const updateEntry = async (idInDb) => {
             window.close();
         }, 1000);
 
+        localStorage.removeItem(POPUP_STATE_KEY);
+
         checkUrlReq(dataJSON.url);
     }
 };
@@ -232,6 +236,8 @@ const removeEntry = async (idInDb) => {
             bkmSaveState = true;
             window.close();
         }, 1000);
+
+        localStorage.removeItem(POPUP_STATE_KEY);
 
         checkUrlReq(currentTab.url);
     }
