@@ -11,16 +11,13 @@ let API_ENDPOINT;
 window.addEventListener("load", async () => {
     API_ENDPOINT = await getAPIEndpoint();
     resizeInput();
-    getCurrTab();
+    getCurrTab()
     setUILink();
     const allTextarea = document.querySelectorAll(".centered textarea");
     allTextarea.forEach((ta) => adjustTextarea(ta));
 });
 
 const adjustTextarea = (tar) => {
-    tar.style.height = "auto";
-    tar.style.height = (tar.scrollHeight + 4) + "px";
-    console.log(tar, tar.style.height);
     tar.addEventListener("input", (v) => {
         if (tar.classList.contains("textarea-no-resize") && v.inputType === "insertLineBreak") {
             const pos = tar.selectionStart;
@@ -115,15 +112,13 @@ const fillData = (dataFromDB) => {
     bkmID.innerText = dataFromDB.id;
     if (!fillDataFromSavedState()) {
         bkmID.innerText = dataFromDB.id;
-        inputUrl.value = dataFromDB.url;
-        inputTitle.value = dataFromDB.title;
-        if (dataFromDB.note) inputNote.value = dataFromDB.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
-        inputNote.value = dataFromDB.note;
-        inputKeywords.value = dataFromDB.keywords;
+        inputUrl.value = dataFromDB.url; inputUrl.style.height = "auto"; inputUrl.style.height = inputUrl.scrollHeight + "px";
+        inputTitle.value = dataFromDB.title; inputTitle.style.height = "auto"; inputTitle.style.height = inputTitle.scrollHeight + "px";
+        inputNote.value = dataFromDB.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
+        inputKeywords.value = dataFromDB.keywords; inputKeywords.style.height = "auto"; inputKeywords.style.height = inputKeywords.scrollHeight + "px";
         inputCategory.value = dataFromDB.category;
         dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
     }
-    return;
 };
 
 const fillAllCategories = async () => {
