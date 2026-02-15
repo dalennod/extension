@@ -13,8 +13,27 @@ window.addEventListener("load", async () => {
     resizeInput();
     getCurrTab();
     setUILink();
-    adjustTextarea(inputNote);
+    const allTextarea = document.querySelectorAll(".centered textarea");
+    allTextarea.forEach((ta) => adjustTextarea(ta));
 });
+
+const adjustTextarea = (tar) => {
+    tar.style.height = "auto";
+    tar.style.height = (tar.scrollHeight + 4) + "px";
+    console.log(tar, tar.style.height);
+    tar.addEventListener("input", (v) => {
+        if (tar.classList.contains("textarea-no-resize") && v.inputType === "insertLineBreak") {
+            const pos = tar.selectionStart;
+            const value = tar.value;
+            const newValue = value.replace(/[\r\n]+/g, '');
+            tar.value = newValue;
+            const newPos = Math.max(0, pos - 1);
+            tar.setSelectionRange(newPos, newPos);
+        }
+        tar.style.height = "auto";
+        tar.style.height = (tar.scrollHeight + 4) + "px";
+    });
+};
 
 let bkmSaveState = false;
 const POPUP_STATE_KEY = "popup_state";
@@ -180,9 +199,6 @@ const updateEntry = async (idInDb) => {
         archive: inputArchive.checked ? true : false,
     };
 
-    console.log(dataJSON);
-    console.log(idInDb);
-
     if (dataJSON.archive) {
         archiveWarn.removeAttribute("hidden");
     } else if (!dataJSON.archive && oldData.archive) {
@@ -308,18 +324,4 @@ const resizeInput = () => {
         input[i].setAttribute("size", biggestValue);
         input[i].value = "";
     }
-};
-
-const adjustTextarea = (tar) => {
-    // 8 = right/left padding of textarea
-    const paddingRL = 8;
-    tar.value.includes("\n")
-        ? tar.style.height = (tar.scrollHeight + paddingRL) + "px"
-        : tar.style.height = tar.scrollHeight + "px";
-    tar.addEventListener("input", () => {
-        tar.style.height = "auto";
-        tar.value.includes("\n")
-            ? tar.style.height = (tar.scrollHeight + paddingRL) + "px"
-            : tar.style.height = tar.scrollHeight + "px";
-    });
 };
