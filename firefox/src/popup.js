@@ -57,11 +57,16 @@ const setUILink = () => {
     a.forEach((item) => item.href = API_ENDPOINT.slice(0, -5));
 };
 
+const adjustInputBoxHeight = (inputID) => {
+    inputID.style.height = "auto";
+    inputID.style.height = (inputID.scrollHeight + 4) + "px";
+}
+
 const getCurrTab = () => {
     browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         setCurrentTab(tabs[0]);
-        inputUrl.value = currentTab.url;
-        inputTitle.value = currentTab.title;
+        inputUrl.value = currentTab.url; adjustInputBoxHeight(inputUrl);
+        inputTitle.value = currentTab.title; adjustInputBoxHeight(inputTitle);
         checkUrlReq(currentTab.url);
     });
 };
@@ -99,10 +104,12 @@ const fillDataFromSavedState = () => {
 
         for (let [id, value] of Object.entries(state.inputs)) {
             const el = document.getElementById(id);
-            if (el) el.value = value;
+            if (!el) continue;
+            el.value = value;
+            adjustInputBoxHeight(el); // TODO: I need to test if this works as expected or not
         }
-        inputNote.style.height = "auto";
-        inputNote.style.height = inputNote.scrollHeight + "px";
+        // inputNote.style.height = "auto";
+        // inputNote.style.height = inputNote.scrollHeight + "px";
         return true;
     }
     return false;
@@ -112,10 +119,10 @@ const fillData = (dataFromDB) => {
     bkmID.innerText = dataFromDB.id;
     if (!fillDataFromSavedState()) {
         bkmID.innerText = dataFromDB.id;
-        inputUrl.value = dataFromDB.url; inputUrl.style.height = "auto"; inputUrl.style.height = inputUrl.scrollHeight + "px";
-        inputTitle.value = dataFromDB.title; inputTitle.style.height = "auto"; inputTitle.style.height = inputTitle.scrollHeight + "px";
-        inputNote.value = dataFromDB.note; inputNote.style.height = "auto"; inputNote.style.height = inputNote.scrollHeight + "px";
-        inputKeywords.value = dataFromDB.keywords; inputKeywords.style.height = "auto"; inputKeywords.style.height = inputKeywords.scrollHeight + "px";
+        inputUrl.value = dataFromDB.url; adjustInputBoxHeight(inputUrl);
+        inputTitle.value = dataFromDB.title; adjustInputBoxHeight(inputTitle);
+        inputNote.value = dataFromDB.note; adjustInputBoxHeight(inputNote);
+        inputKeywords.value = dataFromDB.keywords; adjustInputBoxHeight(inputKeywords);
         inputCategory.value = dataFromDB.category;
         dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
     }
@@ -288,7 +295,7 @@ const getSuggestion = (lastWord) => {
     return autocompleteWords.find(word => word.startsWith(lastWord));
 }
 
-inputKeywords.addEventListener("focus", () => { gatherWords();  });
+inputKeywords.addEventListener("focus", () => { gatherWords(); });
 const gatherWords = () => {
     const minLength = 2;
     const delim = " ";
