@@ -28,17 +28,14 @@ const [bkmID, inputUrl, inputTitle, inputNote, inputKeywords, inputCategory, cat
 ];
 
 let API_ENDPOINT;
+let allTextarea;
 window.addEventListener("load", async () => {
+    allTextarea = document.querySelectorAll(".centered textarea");
     API_ENDPOINT = await getAPIEndpoint();
     resizeInput();
     getCurrTab()
     setUILink();
-
-    const allTextarea = document.querySelectorAll(".centered textarea");
-    allTextarea.forEach((ta) => {
-        adjustTextareaEventListener(ta);
-        adjustInputBoxHeight(ta);
-    });
+    allTextarea.forEach((ta) => adjustTextareaEventListener(ta));
 });
 
 const adjustTextareaEventListener = (tar) => {
@@ -91,6 +88,7 @@ const getCurrTab = () => {
         setCurrentTab(tabs[0]);
         inputUrl.value = currentTab.url;
         inputTitle.value = currentTab.title;
+        allTextarea.forEach((ta) => adjustInputBoxHeight(ta));
         checkUrlReq(currentTab.url);
     });
 };
@@ -125,12 +123,12 @@ const fillDataFromSavedState = () => {
         if (state.bkmSaveState || state.inputs["input-url"] !== inputUrl.value) {
             return false;
         }
-
         for (let [id, value] of Object.entries(state.inputs)) {
             const el = document.getElementById(id);
             if (!el) continue;
             el.value = value;
         }
+        allTextarea.forEach((ta) => adjustInputBoxHeight(ta));
         return true;
     }
     return false;
@@ -146,6 +144,7 @@ const fillData = (dataFromDB) => {
         inputKeywords.value = dataFromDB.keywords;
         inputCategory.value = dataFromDB.category;
         dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
+        allTextarea.forEach((ta) => adjustInputBoxHeight(ta));
     }
 };
 
