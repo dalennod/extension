@@ -3,9 +3,29 @@ import { getAPIEndpoint, checkUrl, currentTab, setCurrentTab } from "./module.js
 
 "use strict";
 
-const [overlayDiv, overlayText, checkmark, archiveWarn, archiveLabel] = [document.getElementById("done-overlay-div"), document.getElementById("done-overlay-text"), document.getElementById("checkmark"), document.getElementById("archive-warn"), document.getElementById("input-archive-label")];
-const [btnCreate, btnUpdate, btnRemove, btnArchive] = [document.getElementById("button-add-req"), document.getElementById("button-update-req"), document.getElementById("button-remove-req"), document.getElementById("radio-btn-archive")];
-const [bkmID, inputUrl, inputTitle, inputNote, inputKeywords, inputCategory, categoriesList, inputArchive] = [document.getElementById("bkm-id"), document.getElementById("input-url"), document.getElementById("input-title"), document.getElementById("input-note"), document.getElementById("input-keywords"), document.getElementById("input-category"), document.getElementById("categories-list"), document.getElementById("input-archive")];
+const [overlayDiv, overlayText, checkmark, archiveWarn, archiveLabel] = [
+    document.getElementById("done-overlay-div"),
+    document.getElementById("done-overlay-text"),
+    document.getElementById("checkmark"),
+    document.getElementById("archive-warn"),
+    document.getElementById("input-archive-label"),
+];
+const [btnCreate, btnUpdate, btnRemove, btnArchive] = [
+    document.getElementById("button-add-req"),
+    document.getElementById("button-update-req"),
+    document.getElementById("button-remove-req"),
+    document.getElementById("radio-btn-archive"),
+];
+const [bkmID, inputUrl, inputTitle, inputNote, inputKeywords, inputCategory, categoriesList, inputArchive] = [
+    document.getElementById("bkm-id"),
+    document.getElementById("input-url"),
+    document.getElementById("input-title"),
+    document.getElementById("input-note"),
+    document.getElementById("input-keywords"),
+    document.getElementById("input-category"),
+    document.getElementById("categories-list"),
+    document.getElementById("input-archive"),
+];
 
 let API_ENDPOINT;
 window.addEventListener("load", async () => {
@@ -13,11 +33,15 @@ window.addEventListener("load", async () => {
     resizeInput();
     getCurrTab()
     setUILink();
+
     const allTextarea = document.querySelectorAll(".centered textarea");
-    allTextarea.forEach((ta) => adjustTextarea(ta));
+    allTextarea.forEach((ta) => {
+        adjustTextareaEventListener(ta);
+        adjustInputBoxHeight(ta);
+    });
 });
 
-const adjustTextarea = (tar) => {
+const adjustTextareaEventListener = (tar) => {
     tar.addEventListener("input", (v) => {
         if (tar.classList.contains("textarea-no-resize") && v.inputType === "insertLineBreak") {
             const pos = tar.selectionStart;
@@ -30,6 +54,11 @@ const adjustTextarea = (tar) => {
         tar.style.height = "auto";
         tar.style.height = (tar.scrollHeight + 4) + "px";
     });
+};
+
+const adjustInputBoxHeight = (inputID) => {
+    inputID.style.height = "auto";
+    inputID.style.height = (inputID.scrollHeight + 4) + "px";
 };
 
 let bkmSaveState = false;
@@ -57,16 +86,11 @@ const setUILink = () => {
     a.forEach((item) => item.href = API_ENDPOINT.slice(0, -5));
 };
 
-const adjustInputBoxHeight = (inputID) => {
-    inputID.style.height = "auto";
-    inputID.style.height = (inputID.scrollHeight + 4) + "px";
-}
-
 const getCurrTab = () => {
     browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         setCurrentTab(tabs[0]);
-        inputUrl.value = currentTab.url; adjustInputBoxHeight(inputUrl);
-        inputTitle.value = currentTab.title; adjustInputBoxHeight(inputTitle);
+        inputUrl.value = currentTab.url;
+        inputTitle.value = currentTab.title;
         checkUrlReq(currentTab.url);
     });
 };
@@ -106,23 +130,20 @@ const fillDataFromSavedState = () => {
             const el = document.getElementById(id);
             if (!el) continue;
             el.value = value;
-            adjustInputBoxHeight(el); // TODO: I need to test if this works as expected or not
         }
-        // inputNote.style.height = "auto";
-        // inputNote.style.height = inputNote.scrollHeight + "px";
         return true;
     }
     return false;
-}
+};
 
 const fillData = (dataFromDB) => {
     bkmID.innerText = dataFromDB.id;
     if (!fillDataFromSavedState()) {
         bkmID.innerText = dataFromDB.id;
-        inputUrl.value = dataFromDB.url; adjustInputBoxHeight(inputUrl);
-        inputTitle.value = dataFromDB.title; adjustInputBoxHeight(inputTitle);
-        inputNote.value = dataFromDB.note; adjustInputBoxHeight(inputNote);
-        inputKeywords.value = dataFromDB.keywords; adjustInputBoxHeight(inputKeywords);
+        inputUrl.value = dataFromDB.url;
+        inputTitle.value = dataFromDB.title;
+        inputNote.value = dataFromDB.note;
+        inputKeywords.value = dataFromDB.keywords;
         inputCategory.value = dataFromDB.category;
         dataFromDB.archive ? btnArchive.setAttribute("hidden", "") : btnArchive.removeAttribute("hidden");
     }
@@ -293,7 +314,7 @@ inputKeywords.addEventListener("keydown", (event) => {
 let autocompleteWords = [];
 const getSuggestion = (lastWord) => {
     return autocompleteWords.find(word => word.startsWith(lastWord));
-}
+};
 
 inputKeywords.addEventListener("focus", () => { gatherWords(); });
 const gatherWords = () => {
