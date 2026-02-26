@@ -2,10 +2,12 @@
 
 const storeWebAddr = async (webAddr) => {
     const defaultWebAddr = "http://localhost:41415";
-    if ((await browser.storage.local.get("web_addr")).web_addr === undefined) await browser.storage.local.set({ "web_addr": defaultWebAddr });
-    else {
-        if (webAddr === "" || webAddr === undefined) await browser.storage.local.set({ "web_addr": defaultWebAddr });
-        else await browser.storage.local.set({ "web_addr": webAddr });
+    if ((await browser.storage.local.get("web_addr")).web_addr === undefined) {
+        await browser.storage.local.set({ web_addr: defaultWebAddr });
+    } else {
+        if (webAddr === "" || webAddr === undefined)
+            await browser.storage.local.set({ web_addr: defaultWebAddr });
+        else await browser.storage.local.set({ web_addr: webAddr });
     }
 };
 

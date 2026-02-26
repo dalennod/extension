@@ -20,8 +20,11 @@ const tabUpdated = async (tabId, changeInfo, tab) => {
 const setIcon = async () => {
     if (await getAPIEndpoint() === undefined) await storeWebAddr();
     const response = await checkUrl();
-    if (response.status === 404) await browser.browserAction.setIcon({ path: defaultIconPaths });
-    else                         await browser.browserAction.setIcon({ path: existsIconPaths  });
+    if (response.status === 404) {
+        await browser.browserAction.setIcon({ path: defaultIconPaths });
+    } else {
+        await browser.browserAction.setIcon({ path: existsIconPaths });
+    }
 };
 
 browser.tabs.onActivated.addListener(tabActivated);

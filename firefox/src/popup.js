@@ -257,6 +257,7 @@ const updateEntry = async (idInDb) => {
     }
 };
 
+// TODO: use alter() & keep a single click
 btnRemove.addEventListener("dblclick", () => removeEntry(bkmID.innerHTML));
 const removeEntry = async (idInDb) => {
     const fetchURL = API_ENDPOINT + "delete/" + idInDb;
@@ -333,15 +334,8 @@ const gatherWords = () => {
 
 const resizeInput = () => {
     const input = document.querySelectorAll("input");
-    // const inputPlaceholder = document.querySelectorAll(".input-placeholder");
-
-    // Longest placeholder's string length + random number that looks good
-    let biggestValue = 35;
-    // for (let i = 0; i < inputPlaceholder.length; i++) {
-    //     if (inputPlaceholder[i].innerText.length > biggestValue) {
-    //         biggestValue = inputPlaceholder[i].innerText.length;
-    //     }
-    // }
+    // TODO: move this to be a configurable value from Options page
+    const biggestValue = 35;
     for (let i = 0; i < input.length; i++) {
         input[i].setAttribute("size", biggestValue);
         input[i].value = "";
