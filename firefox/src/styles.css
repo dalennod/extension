@@ -1,10 +1,11 @@
 :root {
-    --dark-mode-foreground : #232323;
-    --dark-mode-background : #121212;
-    --text                 : 238, 238, 238;
-    --global-border-color  : #aaaaaa;
-    --accent-color         : #1abbe9;
-    --red-text             : #ff3535;
+    --dark-mode-foreground: #232323;
+    --dark-mode-background: #121212;
+    --text: #eeeeee;
+    --text-rgba: 238, 238, 238;
+    --global-border-color: #aaaaaa;
+    --accent-color: #1abbe9;
+    --red-text: #ff3535;
 }
 
 html {
@@ -15,7 +16,7 @@ html {
 body {
     font-family: system-ui, Arial, sans-serif;
     background-color: var(--dark-mode-background);
-    color: rgb(var(--text));
+    color: var(--text);
 }
 
 body * {
@@ -23,7 +24,7 @@ body * {
 }
 
 button {
-    border-radius: 1%;
+    border-radius: 5px;
     color: #000000;
     background-color: var(--accent-color);
     border-color: var(--accent-color);
@@ -65,106 +66,58 @@ input[type="checkbox"]:checked {
     animation: pop 0.3s ease;
 }
 
-nav {
+nav a {
     background-color: var(--dark-mode-foreground);
+    border-radius: 5px;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-radius: 1%;
+    margin-bottom: 5px;
 }
 
 a {
     text-decoration: none;
-    color: rgb(var(--text));
+    color: var(--text);
 }
 
 a:hover {
     color: var(--accent-color);
 }
 
-.label-input {
-    display: grid;
+/* Thanks: https://uiverse.io/kamehame-ha/lovely-fly-87 */
+.fieldinput {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: static;
+}
+
+.fieldinput label.label-input {
+    font-size: 0.85rem;
+    color: var(--text);
+    font-weight: bold;
     position: relative;
-    width: 100%;
+    top: 0.5rem;
+    margin: 0 0 0 7px;
+    padding: 0 3px;
+    background: var(--dark-mode-background);
+    width: fit-content;
+}
+
+.fieldinput input,
+.fieldinput textarea {
+    padding: 8px;
+    font-size: 1rem;
+    border: 2px rgba(var(--text-rgba), 0.3) solid;
     border-radius: 5px;
-    overflow: hidden;
+    background: var(--dark-mode-background);
+    color: var(--text);
 }
 
-.label-input .input-placeholder {
-    position: absolute;
-    top: 16px;
-    left: 8px;
-    font-size: 1rem;
-    color: rgba(var(--text), 0.5);
-    transform-origin: 0 0;
-    transform: translate3d(0, 0, 0);
-    transition: all 0.2s ease;
-    pointer-events: none;
-}
-
-.label-input .focus-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(var(--text), 0.05);
-    z-index: -1;
-    transform: scaleX(0);
-    transform-origin: left;
-}
-
-.label-input input,
-.label-input textarea {
-    appearance: none;
-    width: 100%;
-    border: 0;
-    height: 50px;
-    font-size: 1rem;
-    background: rgba(var(--text), 0.02);
-    box-shadow: inset 0 -1px 0 rgba(var(--text), 0.3);
-    color: rgb(var(--text));
-    transition: all 0.15s ease;
-}
-
-.label-input input {
-    padding: 16px 8px 0px 8px;
-}
-
-.label-input textarea {
-    padding: 20px 10px 0px 10px;
-}
-
-.label-input input:hover,
-.label-input textarea:hover {
-    background: rgba(var(--text), 0.04);
-    box-shadow: inset 0 -1px 0 rgba(var(--text), 0.5);
-}
-
-.label-input input:not(:placeholder-shown) + .input-placeholder,
-.label-input textarea:not(:placeholder-shown) + .input-placeholder {
-    color: rgba(var(--text), 0.5);
-    transform: translate3d(0, -12px, 0) scale(0.75);
-}
-
-.label-input input:focus,
-.label-input textarea:focus {
-    background: rgba(var(--text), 0.05);
+.fieldinput input:focus,
+.fieldinput textarea:focus {
     outline: none;
-    box-shadow: inset 0 -2px 0 var(--accent-color);
-}
-
-.label-input input:focus + .input-placeholder,
-.label-input textarea:focus + .input-placeholder {
-    color: var(--accent-color);
-    transform: translate3d(0, -12px, 0) scale(0.75);
-}
-
-.label-input input:focus + .input-placeholder + .focus-bg,
-.label-input textarea:focus + .input-placeholder + .focus-bg {
-    transform: scaleX(1);
-    transition: all 0.1s ease;
+    border: 2px var(--accent-color) solid;
 }
 
 .done-overlay-div {
@@ -180,18 +133,19 @@ a:hover {
     z-index: 2;
 }
 
-.done-overlay-div > .done-overlay-text {
+.done-overlay-div>.done-overlay-text {
     position: absolute;
     top: 50%;
     left: 50%;
     font-size: 2.5rem;
-    color: rgb(var(--text));
+    color: var(--text);
     transform: translate(-50%, -50%);
 }
 
 .red-text {
     color: var(--red-text);
     text-align: right;
+    font-weight: bold;
 }
 
 .center-text {
